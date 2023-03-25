@@ -1,7 +1,7 @@
 CREATE DATABASE MetDatabase;
 USE MetDatabase;
 
-# create database
+## create database
 CREATE TABLE Artist(
     constituentID int,
     artistRole varchar(25),
@@ -57,7 +57,7 @@ CREATE TABLE Artwork(
     objectDate varchar(256),
     objectBeginDate int,
     objectEndDate int,
-    `medium` json,
+    `medium` varchar(256),
     dimensions varchar(2500),
     measurements json,
     creditLine varchar(560),
@@ -82,3 +82,8 @@ CREATE TABLE Metadata(
     PRIMARY KEY (objectID),
     FOREIGN KEY (objectID) REFERENCES Artwork(objectID)
 );
+
+
+
+## DROP TABLE Metadata;
+## DROP TABLE Artwork;
