@@ -206,7 +206,7 @@ const getArtworkByFilter = async function (req, res) {
 // Get Artworks in a Top culture
 // GET: /artworks/topculture
 const getArtworkInTopCulture = async function (req, res) {
-    
+
 }
 
 
@@ -284,16 +284,28 @@ const getArtistsByFilter = async function (req, res) {
 
     const initial = req.query.initial_name === undefined ? '' : con.escape(req.query.initial_name);
 
+    let whereFlag = true;
     let query = `SELECT * FROM Artist `
     if(artistRole !== ''){
-        query += `WHERE Artist.artistRole = ${artistRole} `
+        query = addCondition(query, `Artist.artistRole = ${artistRole}`, whereFlag);
+        whereFlag = false;
     }
-    query += `AND Artist.beginDate >= ${beginDate} AND Artist.endDate <= ${endDate} `
+    if(beginDate !== ''){
+        query = addCondition(query, `Artist.beginDate >= ${beginDate}`, whereFlag);
+        whereFlag = false;
+    }
+    if(endDate !== ''){
+        query = addCondition(query, `Artist.endDate <= ${endDate}`, whereFlag);
+        whereFlag = false;
+    }
+
     if(artistNationality !== ''){
-        query += `AND (Artist.artistNationality = ${artistNationality} OR Artist.artistNationality Like '${artistNationality}%') `
+        query = addCondition(query, `Artist.artistNationality Like '%${artistNationality}%'`, whereFlag);
+        whereFlag = false;
     }
     if(initial !== ''){
-        query += `AND Artist.artistDisplayName Like '${initial}%' `
+        query = addCondition(query, `Artist.artistDisplayName Like '${initial}%'`, whereFlag);
+        whereFlag = false;
     }
     query += `ORDER BY Artist.artistDisplayName ASC`
     if(numArtists !== ''){
