@@ -1,4 +1,6 @@
 const mysql = require('mysql')
+const {addCondition} = require("./queryUtils");
+
 require('dotenv').config()
 
 // create a connection to the database
@@ -91,14 +93,121 @@ const getRandomArtwork = async function (req, res) {
  * */
 // Artwork search
 // GET: /search_artwork
-// TODO: location info
-
 const getArtworkByFilter = async function (req, res) {
+    const page = req.query.page === undefined ? 1 : con.escape(req.query.page);
+    const pageSize = req.query.page_size === undefined ? 10 : con.escape(req.query.page_size);
 
+    // Selector
+    const isHightlight = req.query.is_highlight === undefined ? "" : con.escape(req.query.is_highlight);
+    // const accessionYear = req.query.accession_year === undefined ? "" : con.escape(req.query.accession_year);
+    const isPublicDomain = req.query.is_public_domain === undefined ? "" : con.escape(req.query.is_public_domain);
+    const objectBeginDate = req.query.object_begin_date === undefined ? "" : con.escape(req.query.object_begin_date);
+    const objectEndDate = req.query.object_end_date === undefined ? "" : con.escape(req.query.object_end_date);
+    const department = req.query.department === undefined ? "" : con.escape(req.query.department);
+
+    // dropdown box
+    const classification = req.query.classification === undefined ? "" : con.escape(req.query.classification);
+    const portfolio = req.query.portfolio === undefined ? "" : con.escape(req.query.profolio);
+
+    // Contains
+    const objectName = req.query.object_name === undefined ? "" : con.escape(req.query.object_name);
+    const titleInitial = req.query.title === undefined ? "" : con.escape(req.query.title);
+    const culture = req.query.culture === undefined ? "" : con.escape(req.query.culture);
+    const dynasty = req.query.dynasty === undefined ? "" : con.escape(req.query.dynasty);
+    const medium = req.query.medium === undefined ? "" : con.escape(req.query.medium);
+
+    // artist and location info. Contains.
+    const artist = req.query.artist === undefined ? "" : con.escape(req.query.artist);
+    const country = req.query.location === undefined ? "" : con.escape(req.query.country);
+
+    let artistSubquery = "";
+    let countrySubquery = "";
+    if(artist !== "") {
+        artistSubquery = `SELECT Artist.constituentID FROM Artist WHERE displayName LIKE '%${artist}%'`;
+    }
+    if(country !== "") {
+        countrySubquery = `SELECT Location.locationID FROM Location WHERE country LIKE '%${country}%'`;
+    }
+
+    let query = `Select * From Artwork `;
+
+    let whereFlag = true;
+    if(isHightlight !== ""){
+        query = addCondition(query, `Artwork.isHighlight = '${isHightlight}'`, whereFlag);
+        whereFlag = false;
+    }
+    if(isPublicDomain !== ""){
+        query = addCondition(query, `Artwork.isPublicDomain = '${isPublicDomain}'`, whereFlag);
+        whereFlag = false;
+    }
+    if(objectBeginDate !== ""){
+        query = addCondition(query, `Artwork.objectBeginDate Between '${objectBeginDate}' And '${objectEndDate}'`, whereFlag);
+        whereFlag = false;
+    }
+    if(objectEndDate !== ""){
+        query = addCondition(query, `Artwork.objectEndDate Between '${objectBeginDate}' And '${objectEndDate}'`, whereFlag);
+        whereFlag = false;
+    }
+    if(department !== ""){
+        query = addCondition(query, `Artwork.department = '${department}'`, whereFlag);
+        whereFlag = false;
+    }
+    if(classification !== ""){
+        query = addCondition(query, `Artwork.classification Like '%${classification}%'`, whereFlag);
+        whereFlag = false;
+    }
+    if(portfolio !== ""){
+        query = addCondition(query, `Artwork.portfolio Like '%${portfolio}%'`, whereFlag);
+        whereFlag = false;
+    }
+    if(objectName !== ""){
+        query = addCondition(query, `Artwork.objectName Like '%${objectName}%'`, whereFlag);
+        whereFlag = false;
+    }
+    if(titleInitial !== ""){
+        query = addCondition(query, `Artwork.title Like '%${titleInitial}%'`, whereFlag);
+        whereFlag = false;
+    }
+    if(culture !== ""){
+        query = addCondition(query, `Artwork.culture Like '%${culture}%'`, whereFlag);
+        whereFlag = false;
+    }
+    if(dynasty !== ""){
+        query = addCondition(query, `Artwork.dynasty Like '%${dynasty}%'`, whereFlag);
+        whereFlag = false;
+    }
+    if(medium !== ""){
+        query = addCondition(query, `Artwork.medium Like '%${medium}%'`, whereFlag);
+        whereFlag = false;
+    }
+    if(artistSubquery !== ""){
+        query = addCondition(query, `Artwork.constituentID IN (${artistSubquery})`, whereFlag);
+        whereFlag = false;
+    }
+    if(countrySubquery !== ""){
+        query = addCondition(query, `Artwork.locationID IN (${countrySubquery})`, whereFlag);
+        whereFlag = false;
+    }
+
+    query += `Order By Artwork.objectID Limit ${pageSize} Offset ${(page - 1) * pageSize}`;
+
+    con.query(query
+        , (err, data) => {
+            if (err || data.length === 0) {
+                console.log(err);
+                res.json([]);
+            } else {
+                res.json(data);
+            }
+        });
 }
 
 
 // Get Artworks in a Top culture
+// GET: /artworks/topculture
+const getArtworkInTopCulture = async function (req, res) {
+    
+}
 
 
 // Get Artworks for Top artist
@@ -186,10 +295,10 @@ const getArtistsByFilter = async function (req, res) {
     if(initial !== ''){
         query += `AND Artist.artistDisplayName Like '${initial}%' `
     }
+    query += `ORDER BY Artist.artistDisplayName ASC`
     if(numArtists !== ''){
         query += `LIMIT ${numArtists}`
     }
-    query += `ORDER BY Artist.artistDisplayName ASC`
 
     con.query(query, (err, data) => {
         if (err || data.length === 0) {
