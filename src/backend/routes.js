@@ -35,29 +35,37 @@ const getAllArtworks = async function (req, res) {
 // Get artwork by id
 // GET: /complete_artwork/:artwork_id
 const getCompleteArtworkById = async function (req, res) {
-    const artworkId = con.escape(req.params.artwork_id);
-    con.query(`
-            SELECT * 
-            FROM Artwork JOIN Artist ON Artwork.constituentID = Artist.constituentID 
-                JOIN Location ON Artwork.locationID = Location.locationID
-                JOIN Metadata ON Artwork.objectID = Metadata.objectID
-            WHERE artwork_id = ${artworkId}
+
+    if (req.params.type === 'artwork_id') {
+
+        console.log(`req.params.artwork_id: ${req.params.artwork_id}`);
+        const artworkId = con.escape(req.params.artwork_id);
+        console.log(`artworkId: ${artworkId}`);
+
+        con.query(`
+                    SELECT *
+                    FROM Artwork
+                             JOIN Artist ON Artwork.constituentID = Artist.constituentID
+                             JOIN Location ON Artwork.locationID = Location.locationID
+                             JOIN Metadata ON Artwork.objectID = Metadata.objectID
+                    WHERE Artwork.objectID = ${artworkId}
             `
-        , (err, data) => {
-            if (err || data.length === 0) {
-                console.log(err);
-                res.json({});
-            } else {
-                res.json(data[0]);
-            }
-        });
+            , (err, data) => {
+                if (err || data.length === 0) {
+                    console.log(err);
+                    res.json({});
+                } else {
+                    res.json(data[0]);
+                }
+            });
+    }
 };
 
 // Get artwork without join.
 // GET: /artwork/:artwork_id
 const getArtworkById = async function (req, res) {
     const artworkId = con.escape(req.params.artwork_id);
-    con.query(`SELECT * FROM Artwork WHERE artwork_id = ${artworkId}`, (err, data) => {
+    con.query(`SELECT * FROM Artwork WHERE objectID = ${artworkId}`, (err, data) => {
         if (err || data.length === 0) {
             console.log(err);
             res.json({});
@@ -71,17 +79,11 @@ const getArtworkById = async function (req, res) {
 // Get random artwork
 // GET: /artwork/random
 const getRandomArtwork = async function (req, res) {
-    const randomArtworks = req.query.num_artworks === undefined ? 1 : con.escape(req.query.num_artworks);
-
-    con.query(`
-            SELECT * 
-            FROM Artwork 
-            ORDER BY RAND() 
-            LIMIT ${randomArtworks}`
-        , (err, data) => {
+    const numArtworks = req.query.num_artworks || 1;
+    con.query(`SELECT * FROM Artwork ORDER BY RAND() LIMIT ${numArtworks}`, (err, data) => {
         if (err || data.length === 0) {
             console.log(err);
-            res.json([]);
+            res.json({});
         } else {
             res.json(data[0]);
         }
@@ -206,6 +208,19 @@ const getArtworkByFilter = async function (req, res) {
 // Get Artworks in a Top culture
 // GET: /artworks/topculture
 const getArtworkInTopCulture = async function (req, res) {
+    const culture = req.query.culture === undefined ? "'American'" : con.escape(req.query.culture);
+    console.log(con.escape(req.query.culture));
+    console.log(culture);
+    const page = req.query.page === undefined ? 1 : con.escape(req.query.page);
+    const pageSize = req.query.page_size === undefined ? 10 : con.escape(req.query.page_size);
+    con.query(`SELECT * FROM Artwork WHERE culture = ${culture} Order By objectID Limit ${pageSize} Offset ${(page - 1) * pageSize}`, (err, data) => {
+        if (err || data.length === 0) {
+            console.log(err);
+            res.json([]);
+        } else {
+            res.json(data);
+        }
+    });
 
 }
 
@@ -327,7 +342,7 @@ const getArtistsByFilter = async function (req, res) {
 // Top artists are based on the number of artworks they have created.
 // GET: /top_artists/:num_artists
 const getTopArtistsByFilter = async function (req, res) {
-    const numArtists = req.params.num_artists === undefined ? 10 : con.escape(req.params.num_artists);
+    const numArtists = req.params.num_artists === undefined ? 10 : parseInt(req.params.num_artists);
     const artistRole = req.query.artist_role === undefined ? '' : con.escape(req.query.artist_role);
     const beginDate = req.query.begin_date === undefined ? '' : con.escape(req.query.begin_date);
     const endDate = req.query.end_date === undefined ? '' : con.escape(req.query.end_date);
@@ -335,12 +350,15 @@ const getTopArtistsByFilter = async function (req, res) {
 
     const initial = req.query.initial_name === undefined ? '' : con.escape(req.query.initial_name);
 
-    let subquery1 = `SELECT Artist.constituentID FROM Artist `;
+    let subquery1 = `SELECT Artist.constituentID
+                     FROM Artist `;
 
-    if(artistRole !== ''){
+    if (artistRole !== '') {
         subquery1 += `WHERE Artist.artistRole = ${artistRole} `;
     }
-    subquery1 += `AND Artist.beginDate >= ${beginDate} AND Artist.endDate <= ${endDate} `;
+    if(beginDate !== '' && endDate !== ''){
+        subquery1 += `AND Artist.beginDate >= ${beginDate} AND Artist.endDate <= ${endDate} `;
+    }
     if(artistNationality !== ''){
         subquery1 += `AND (Artist.artistNationality = ${artistNationality} OR Artist.artistNationality Like '${artistNationality}%') `;
     }
@@ -349,7 +367,7 @@ const getTopArtistsByFilter = async function (req, res) {
     }
 
     let subquery2 = `
-        SELECT Artist.constituentID, COUNT(Artwork.artwork_id) AS num_artworks
+        SELECT Artist.constituentID, COUNT(Artwork.objectID) AS num_artworks
         FROM Artwork JOIN Artist ON Artwork.constituentID = Artist.constituentID
         WHERE Artwork.constituentID IN (SELECT SelectedArtistsID.constituentID FROM SelectedArtistsID)
         GROUP BY Artwork.constituentID
@@ -395,6 +413,39 @@ const getLocationById = async function (req, res) {
         }
     });
 };
+// Get the department that contains most of the culture numbers;
+const getDepartmentWithMostCulture = async function (req, res) {
+    const department = req.query.num_department === undefined ? 10 : parseInt(req.query.num_department);
+    // Define the SQL query as a multi-line string
+    const query = `
+    WITH departmentCulture AS (
+      SELECT Artwork.objectID, Artwork.department, Artwork.culture
+      FROM Artwork
+      WHERE Artwork.department IS NOT NULL
+        AND Artwork.culture IS NOT NULL
+    ),
+    departmentCultureNum AS (
+      SELECT departmentCulture.department, COUNT(DISTINCT departmentCulture.culture) AS num_artwork
+      FROM departmentCulture
+      GROUP BY departmentCulture.department
+      HAVING num_artwork > 0
+    )
+    SELECT departmentCultureNum.department
+    FROM departmentCultureNum
+    ORDER BY departmentCultureNum.num_artwork DESC, RAND(departmentCultureNum.department)
+    LIMIT ${department};
+  `;
+
+    // Send the query to the database
+    con.query(query, (err, data) => {
+        if (err || data.length === 0) {
+            console.log(err);
+            res.json([]);
+        } else {
+            res.json(data);
+        }
+    });
+};
 
 /**
  * Metadata
@@ -414,6 +465,22 @@ const getMetadataById = async function (req, res) {
     });
 };
 
+module.exports = {
+    getAllArtworks,
+    getCompleteArtworkById,
+    getRandomArtwork,
+    getArtworkById,
+    getArtistsByFilter,
+    getTopArtistsByFilter,
+    getLocationById,
+    getMetadataById,
+    getArtworkByFilter,
+    getArtworkInTopCulture,
+    getAllArtists,
+    getArtistById,
+    getDepartmentWithMostCulture,
+
+}
 
 
 

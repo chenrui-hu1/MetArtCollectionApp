@@ -87,3 +87,24 @@ CREATE TABLE Metadata(
 
 ## DROP TABLE Metadata;
 ## DROP TABLE Artwork;
+
+ALTER TABLE Artwork MODIFY COLUMN isHighlight boolean;
+
+
+
+WITH departmentCulture AS (
+    SELECT Artwork.objectID, Artwork.department, Artwork.culture
+    FROM Artwork
+    WHERE Artwork.department IS NOT NULL
+      AND Artwork.culture IS NOT NULL
+),
+     departmentCultureNum AS (
+         SELECT departmentCulture.department, COUNT(DISTINCT departmentCulture.culture) AS num_artwork
+         FROM departmentCulture
+         GROUP BY departmentCulture.department
+         HAVING num_artwork > 0
+     )
+SELECT departmentCultureNum.department
+FROM departmentCultureNum
+ORDER BY departmentCultureNum.num_artwork DESC, RAND(departmentCultureNum.department)
+LIMIT 10;
