@@ -36,29 +36,29 @@ const getAllArtworks = async function (req, res) {
 // GET: /complete_artwork/:artwork_id
 const getCompleteArtworkById = async function (req, res) {
 
-    if (req.params.type === 'artwork_id') {
 
-        console.log(`req.params.artwork_id: ${req.params.artwork_id}`);
-        const artworkId = con.escape(req.params.artwork_id);
-        console.log(`artworkId: ${artworkId}`);
 
-        con.query(`
-                    SELECT *
-                    FROM Artwork
-                             JOIN Artist ON Artwork.constituentID = Artist.constituentID
-                             JOIN Location ON Artwork.locationID = Location.locationID
-                             JOIN Metadata ON Artwork.objectID = Metadata.objectID
-                    WHERE Artwork.objectID = ${artworkId}
-            `
-            , (err, data) => {
-                if (err || data.length === 0) {
-                    console.log(err);
-                    res.json({});
-                } else {
-                    res.json(data[0]);
-                }
-            });
-    }
+    console.log(`req.params.artwork_id: ${req.params.artwork_id}`);
+    const artworkId = con.escape(req.params.artwork_id);
+    console.log(`artworkId: ${artworkId}`);
+
+    con.query(`
+                SELECT *
+                FROM Artwork
+                         JOIN Artist ON Artwork.constituentID = Artist.constituentID
+                         JOIN Location ON Artwork.locationID = Location.locationID
+                         JOIN Metadata ON Artwork.objectID = Metadata.objectID
+                WHERE Artwork.objectID = ${artworkId}
+        `
+        , (err, data) => {
+            if (err || data.length === 0) {
+                console.log(err);
+                res.json({});
+            } else {
+                res.json(data[0]);
+            }
+        });
+
 };
 
 // Get artwork without join.
@@ -464,6 +464,8 @@ const getMetadataById = async function (req, res) {
         }
     });
 };
+
+
 
 module.exports = {
     getAllArtworks,
