@@ -40,15 +40,16 @@ app.get('/', function(req, res) {
 });
 app.get('/artworks', routes.getAllArtworks);
 app.get('/complete_artwork/:artwork_id', routes.getCompleteArtworkById);
-app.get('/artworks/random', routes.getRandomArtwork);
-app.get('/artworks/topculture', routes.getArtworkInTopCulture);
+app.get('/random_artworks/:num_artworks', routes.getRandomArtwork);
+app.get('/top_culture_artworks', routes.getArtworkInTopCulture);
 app.get('/artworks/:artwork_id', routes.getArtworkById);
 app.get('/top_artists/:num_artists', routes.getTopArtistsByFilter);
 app.get('/artists', routes.getAllArtists);
 app.get('/artists/:artist_id', routes.getArtistById);
-app.get('/departments/top_culture', routes.getDepartmentWithMostCulture);
+app.get('/department_with_most_culture/:num_department', routes.getDepartmentWithMostCulture);
 app.get('/location/:location_id', routes.getLocationById);
 app.get('/metadata/:metadata_id', routes.getMetadataById);
+app.get('/top_artists', routes.getTopArtists);
 
 
 const server = app.listen(process.env.SERVER_PORT, () => {

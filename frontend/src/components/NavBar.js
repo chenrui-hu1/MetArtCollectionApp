@@ -1,8 +1,7 @@
 import { AppBar, Container, Toolbar, Typography } from '@mui/material'
 import { NavLink } from 'react-router-dom';
 
-// The hyperlinks in the NavBar contain a lot of repeated formatting code so a
-// helper component NavText local to the file is defined to prevent repeated code.
+
 const NavText = ({ href, text, isMain }) => {
   return (
     <Typography
@@ -36,9 +35,9 @@ export default function NavBar() {
     <AppBar position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <NavText href='/' text='SWIFTIFY' isMain />
-          <NavText href='/albums' text='ALBUMS' />
-          <NavText href='/songs' text='SONGS' />
+          <NavText href='/' text='MetCollection' isMain />
+          <NavText href='/department' text='Department' />
+          <NavText href='/collections' text='Collection' />
         </Toolbar>
       </Container>
     </AppBar>

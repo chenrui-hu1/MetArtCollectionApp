@@ -77,15 +77,18 @@ const getArtworkById = async function (req, res) {
 
 
 // Get random artwork
-// GET: /artwork/random
+// GET: /random_artworks/:num_artworks
 const getRandomArtwork = async function (req, res) {
-    const numArtworks = req.query.num_artworks || 1;
+    const numArtworks = req.params.num_artworks || 1;
+    const page = req.query.page === undefined ? 1 : con.escape(req.query.page);
+    const page_size = req.query.page_size === undefined ? 10 : con.escape(req.query.page_size);
+
     con.query(`SELECT * FROM Artwork ORDER BY RAND() LIMIT ${numArtworks}`, (err, data) => {
         if (err || data.length === 0) {
             console.log(err);
-            res.json({});
+            res.json([]);
         } else {
-            res.json(data[0]);
+            res.json(data);
         }
     });
 }
@@ -206,7 +209,7 @@ const getArtworkByFilter = async function (req, res) {
 
 
 // Get Artworks in a Top culture
-// GET: /artworks/topculture
+// GET: /top_culture_artworks
 const getArtworkInTopCulture = async function (req, res) {
     const culture = req.query.culture === undefined ? "'American'" : con.escape(req.query.culture);
     console.log(con.escape(req.query.culture));
@@ -225,13 +228,6 @@ const getArtworkInTopCulture = async function (req, res) {
 }
 
 
-// Get Artworks for Top artist
-
-
-// Get Artworks for Top profolio
-
-
-// Get
 
 
 /**
@@ -265,7 +261,7 @@ const getArtistById = async function (req, res) {
 };
 
 // Get random artist
-// GET: /artist/random
+// GET: /random_artworks
 const getRandomArtist = async function (req, res) {
     const randomArtists = req.query.num_artists === undefined ? 1 : con.escape(req.query.num_artists);
     con.query(`
@@ -340,7 +336,7 @@ const getArtistsByFilter = async function (req, res) {
 
 // Get top artists.
 // Top artists are based on the number of artworks they have created.
-// GET: /top_artists/:num_artists
+// GET: /top_artists_filter/:num_artists
 const getTopArtistsByFilter = async function (req, res) {
     const numArtists = req.params.num_artists === undefined ? 10 : parseInt(req.params.num_artists);
     const artistRole = req.query.artist_role === undefined ? '' : con.escape(req.query.artist_role);
@@ -349,6 +345,10 @@ const getTopArtistsByFilter = async function (req, res) {
     const artistNationality = req.query.nation === undefined ? '' : con.escape(req.query.nation);
 
     const initial = req.query.initial_name === undefined ? '' : con.escape(req.query.initial_name);
+
+    const page = req.query.page === undefined ? 1 : parseInt(req.query.page);
+    const pageSize = req.query.page_size === undefined ? 5 : parseInt(req.query.page_size);
+
 
     let subquery1 = `SELECT Artist.constituentID
                      FROM Artist `;
@@ -380,8 +380,9 @@ const getTopArtistsByFilter = async function (req, res) {
     query += `
         SELECT Artist.* 
         FROM SelectedArtistWithCount JOIN Artist ON SelectedArtistWithCount.constituentID = Artist.constituentID
+        WHERE Artist.constituentID <> 0 And Artist.artistDisplayName <> 'Unknown' And Artist.artistDisplayName IS NOT NULL 
         ORDER BY SelectedArtistWithCount.num_artworks DESC
-        LIMIT ${numArtists}`;
+        LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}`;
 
     con.query(query
         , (err, data) => {
@@ -393,6 +394,33 @@ const getTopArtistsByFilter = async function (req, res) {
             }
         });
 };
+
+//  GET: /top_artists/:num_artists
+const getTopArtists = async function (req, res) {
+    const page = req.query.page === undefined ? 1 : parseInt(req.query.page);
+    const pageSize = req.query.page_size === undefined ? 5 : parseInt(req.query.page_size);
+
+
+    let query = `
+        SELECT Artist.*, COUNT(Artwork.objectID) AS num_artworks
+        FROM Artwork JOIN Artist ON Artwork.constituentID = Artist.constituentID
+        WHERE Artist.constituentID <> 0 And Artist.artistDisplayName <> 'Unknown' And Artist.artistDisplayName IS NOT NULL
+        GROUP BY Artwork.constituentID
+        HAVING num_artworks > 0
+        ORDER BY num_artworks DESC
+        LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
+        `;
+
+    con.query(query
+        , (err, data) => {
+            if (err || data.length === 0) {
+                console.log(err);
+                res.json([]);
+            } else {
+                res.json(data);
+            }
+        });
+}
 
 
 
@@ -414,6 +442,7 @@ const getLocationById = async function (req, res) {
     });
 };
 // Get the department that contains most of the culture numbers;
+// GET: /department_with_most_culture/:num_department
 const getDepartmentWithMostCulture = async function (req, res) {
     const department = req.query.num_department === undefined ? 10 : parseInt(req.query.num_department);
     // Define the SQL query as a multi-line string
@@ -481,6 +510,7 @@ module.exports = {
     getAllArtists,
     getArtistById,
     getDepartmentWithMostCulture,
+    getTopArtists,
 
 }
 
