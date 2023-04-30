@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Container, Divider, Link } from '@mui/material';
+import {Container, Divider, Grid, Link} from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import RefreshIcon  from '@mui/icons-material/Refresh';
 
 import LazyTable from '../components/LazyTable';
 import CollectionCard from '../components/CollectionCard';
@@ -76,9 +77,16 @@ export default function HomePage() {
                 <Link onClick={() => setSelectedCollectionId(collectionOfTheDay.objectID)}>{collectionOfTheDay.title}</Link>
             </h2>
             <Divider />
-            <h2>Top Collections</h2>
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <h2>Top Collections</h2>
+                </Grid>
+                <Grid item xs={6} style={{marginTop:'20px'}}>
+                    <RefreshIcon fontSize='large'/>
+                </Grid>
+            </Grid>
             {/*<LazyTable route={`http://${config.server_host}:${config.server_port}/random_artworks/100`} columns={collectionColumn} />*/}
-            <CollectionGrid route={`http://${config.server_host}:${config.server_port}/random_artworks/100`}/>
+            <CollectionGrid route={`http://${config.server_host}:${config.server_port}/random_artworks/12`}/>
             <Divider />
             <h2>Top Artists</h2>
             <LazyTable route={`http://${config.server_host}:${config.server_port}/top_artists`}
