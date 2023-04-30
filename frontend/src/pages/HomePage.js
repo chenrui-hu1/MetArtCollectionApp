@@ -2,11 +2,8 @@ import { useEffect, useState } from 'react';
 import {Box, Container, Divider, Grid, Link} from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import RefreshIcon  from '@mui/icons-material/Refresh';
-
 import LazyTable from '../components/LazyTable';
 import CollectionCard from '../components/CollectionCard';
-
-
 import axios from 'axios';
 import CollectionGrid from "../components/CollectionGrid";
 const config = require('../config.json');
@@ -35,27 +32,6 @@ export default function HomePage() {
         console.log("seed");
         setSeed(Math.random());
     }
-
-    // const collectionColumn = [
-    //     {
-    //         field: 'title',
-    //         headerName: 'Collection Title',
-    //         renderCell: (row) => <Link onClick={() => setSelectedCollectionId(row.objectID)}>{row.title}</Link> // A Link component is used just for formatting purposes
-    //     },
-    //     {
-    //         field: 'objectName',
-    //         headerName: 'Object Name',
-    //     },
-    //     {
-    //         field: 'artistDisplayName',
-    //         headerName: 'Artist Name',
-    //         renderCell: (row) => <NavLink to={`/artists/${row.constituentID}`}>{row.artistDisplayName}</NavLink>
-    //     },
-    //     {
-    //         field: 'culture',
-    //         headerName: 'Culture'
-    //     },
-    // ];
 
     const artistColumn = [
         {
