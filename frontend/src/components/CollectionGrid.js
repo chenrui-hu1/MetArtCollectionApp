@@ -9,17 +9,21 @@ const imageFormat = { width: '100%', objectFit:'contain'};
 
 const grid_style = {
     container: {
-        display: 'flex',
-        flexDirection: 'row',
+        // display: 'flex',
+        // flexDirection: 'row',
+        width: '3',
+        height: '200px',
         justifyContent: 'space-evenly',
+        position: "relative",
         background: 'white',
-        borderRadius: '16px',
-        border: '2px solid #000',
+        borderRadius: '10px',
+        padding: '10px',
+        border: '2px solid gray',
     },
     image: {
         width: '100%',
-        // height: '100%',
-        objectFit: 'contain',
+        height: '100%',
+        objectFit: 'cover',
     },
 }
 
@@ -37,7 +41,7 @@ export default function CollectionGrid({route}){
         }
 
         fetchCollection().then(data => {
-            setCollectionList(data.slice(0,10));
+            setCollectionList(data.slice(0,12));
         });
     }, []);
 
@@ -77,9 +81,11 @@ export default function CollectionGrid({route}){
                     <Grid item xs={6} sm={3} key={collection.objectID}>
                         <Box style={grid_style.container}>
                             <img
-                                 style={grid_style.image}
-                                 src={collection.primaryImage}
-                                 alt={`${collection.title}`} />
+                                style={grid_style.image}
+                                src={collection.primaryImage}
+                                alt={`${collection.title}`}
+                                onClick={() => handleOpenModal(collection)}
+                            />
                         </Box>
                     </Grid>
                 ))}
