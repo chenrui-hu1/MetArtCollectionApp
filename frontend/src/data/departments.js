@@ -1,5 +1,5 @@
 const department_list =
-`{ "data":[
+[
   {
     "Department": "The American Wing",
     "Description": "Ever since its establishment in 1870, the Museum has acquired important examples of American art. Today, the American Wing's ever-evolving collection comprises some 20,000 works by African American, Euro American, Native American, and Latin American artists, ranging from the colonial to early-modern period.",
@@ -78,7 +78,7 @@ const department_list =
   {
     "Department": "The Cloisters",
     "Description": "The Museum's collection of medieval and Byzantine art is among the most comprehensive in the world, encompassing the art of the Mediterranean and Europe from the fall of Rome to the beginning of the Renaissance. ",
-    "image": "metDepartment/theCloisters.jpg"
+    "image": "metDepartment/oceania.jpg"
   },
   {
     "Department": "European Paintings",
@@ -95,9 +95,8 @@ const department_list =
     "Description": "The Met's libraries and study centers hold more than 900,000 books, periodicals, and auction catalogs, as well as photographs, prints, trade literature, and archival materials.",
     "image": "metDepartment/library.jpg"
   }
-  ]
-}`;
+];
 
-export default {
+export default
   department_list
-};
+;
