@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {Container, Divider, Grid, Link} from '@mui/material';
+import {Box, Container, Divider, Grid, Link} from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import RefreshIcon  from '@mui/icons-material/Refresh';
 
@@ -16,6 +16,8 @@ export default function HomePage() {
 
     const [selectedCollectionId, setSelectedCollectionId] = useState(null);
 
+    const [seed, setSeed] = useState(0);
+
 
     useEffect( () => {
         async function getRandomArtwork() {
@@ -28,6 +30,11 @@ export default function HomePage() {
         }
         getRandomArtwork().then(data => setCollectionOfTheDay(data[0]));
     }, []);
+
+    const handleSeed = () => {
+        console.log("seed");
+        setSeed(Math.random());
+    }
 
     // const collectionColumn = [
     //     {
@@ -82,11 +89,16 @@ export default function HomePage() {
                     <h2>Top Collections</h2>
                 </Grid>
                 <Grid item xs={6} style={{marginTop:'20px'}}>
-                    <RefreshIcon fontSize='large'/>
+                    <RefreshIcon fontSize='large' onClick={() => handleSeed()}/>
                 </Grid>
             </Grid>
             {/*<LazyTable route={`http://${config.server_host}:${config.server_port}/random_artworks/100`} columns={collectionColumn} />*/}
-            <CollectionGrid route={`http://${config.server_host}:${config.server_port}/random_artworks/12`}/>
+            <Box>
+                <CollectionGrid
+                    route={`http://${config.server_host}:${config.server_port}/random_artworks/12`}
+                    seed={seed}
+                />
+            </Box>
             <Divider />
             <h2>Top Artists</h2>
             <LazyTable route={`http://${config.server_host}:${config.server_port}/top_artists`}

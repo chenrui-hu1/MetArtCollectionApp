@@ -27,7 +27,7 @@ const grid_style = {
 }
 
 
-export default function CollectionGrid({route}){
+export default function CollectionGrid({route, seed}){
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedCollectionImage, setSelectedCollectionImage] = useState(null);
 
@@ -40,9 +40,9 @@ export default function CollectionGrid({route}){
         }
 
         fetchCollection().then(data => {
-            setCollectionList(data.slice(0,12));
+            setCollectionList(data);
         });
-    }, []);
+    }, [seed]);
 
     const handleOpenModal = (image) => {
         setSelectedCollectionImage(image);
