@@ -108,3 +108,13 @@ SELECT departmentCultureNum.department
 FROM departmentCultureNum
 ORDER BY departmentCultureNum.num_artwork DESC, RAND(departmentCultureNum.department)
 LIMIT 10;
+
+
+
+SELECT * FROM Artwork WHERE isHighlight = 'True';
+
+
+Select * From Artwork WHERE Artwork.isHighlight = 'True'AND Artwork.isPublicDomain = 'False'AND Artwork.objectBeginDate Between '1700' And '1800'AND Artwork.objectEndDate Between '1700' And '1800'AND Artwork.department = 'The American Wing'AND Artwork.classification Like '%Missing%'
+
+
+Select * From Artwork WHERE Artwork.isHighlight = 'True' AND Artwork.constituentID IN (SELECT Artist.constituentID FROM Artist)AND Artwork.locationID IN (SELECT Location.locationID FROM Location)Order By Artwork.objectID Limit 10 Offset 10

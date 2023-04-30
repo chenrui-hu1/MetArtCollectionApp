@@ -1,3 +1,4 @@
+import React from 'react';
 import { AppBar, Container, Toolbar, Typography } from '@mui/material'
 import { NavLink } from 'react-router-dom';
 
@@ -35,7 +36,7 @@ export default function NavBar() {
     <AppBar position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <NavText href='/' text='MetCollection' isMain />
+          <NavText href='/home' text='MetCollection' isMain />
           <NavText href='/department' text='Department' />
           <NavText href='/collections' text='Collection' />
         </Toolbar>

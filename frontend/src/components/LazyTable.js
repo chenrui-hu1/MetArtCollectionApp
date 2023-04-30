@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
 
@@ -7,7 +8,8 @@ export default function LazyTable({ route, columns, defaultPageSize, rowsPerPage
   const [data, setData] = useState([]);
 
   const [page, setPage] = useState(1); // 1 indexed
-  const [pageSize, setPageSize] = useState(defaultPageSize ?? 10);
+  const [pageSize, setPageSize] = useState(defaultPageSize !== undefined ? defaultPageSize : 10);
+
 
 
   useEffect(() => {
@@ -58,7 +60,7 @@ export default function LazyTable({ route, columns, defaultPageSize, rowsPerPage
           )}
         </TableBody>
         <TablePagination
-          rowsPerPageOptions={rowsPerPageOptions ?? [5, 10, 25]}
+            rowsPerPageOptions={rowsPerPageOptions !== undefined ? rowsPerPageOptions : [5, 10, 25]}
           count={-1}
           rowsPerPage={pageSize}
           page={page - 1}
