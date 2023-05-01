@@ -101,11 +101,8 @@ const getRandomArtwork = async function (req, res) {
 // Artwork search
 // GET: /search_artwork
 const getArtworkByFilter = async function (req, res) {
-    const page = req.query.page === undefined ? 1 : parseInt(req.query.page);
-    console.log(`page: ${req.query.page}`);
-    console.log(page);
-    const pageSize = req.query.page_size === undefined ? 10 : parseInt(req.query.page_size);
-    console.log(`pageSize: ${pageSize}`);
+    const page = req.query.page === '' ? 1 : parseInt(req.query.page);
+    const pageSize = req.query.page_size === '' ? 10 : parseInt(req.query.page_size);
 
 
     // Selector
@@ -130,13 +127,14 @@ const getArtworkByFilter = async function (req, res) {
     const medium = req.query.medium === undefined ? '' : con.escape(req.query.medium);
 
     // artist and location info. Contains.
-    const artist = req.query.artist === undefined ? '' : con.escape(req.query.artist).replaceAll(" ", "");
-    const country = req.query.location === undefined ? '' : con.escape(req.query.location).replaceAll(" ", "");
+    const artist = req.query.artist === undefined ? '' : con.escape(req.query.artist);
+    const country = req.query.location === undefined ? '' : con.escape(req.query.location);
 
     let artistSubquery = "SELECT Artist.constituentID FROM Artist";
     let countrySubquery = "SELECT Location.locationID FROM Location";
     if(artist !== "''") {
         artistSubquery = `SELECT Artist.constituentID FROM Artist WHERE artistDisplayName LIKE '%${artist.replaceAll("'","")}%'`;
+        console.log(artistSubquery);
     }
     if(country !== "''") {
         countrySubquery = `SELECT Location.locationID FROM Location WHERE country LIKE '%${country.replaceAll("'","")}%'`;
