@@ -42,23 +42,24 @@ export default function DepartmentPage() {
         <Grid container style={styles.container}>
             {department_list.map((department) =>
                 <Grid item spacing={2} >
-                    < Paper
-                        key={department.Department}
-                        style={{ background: 'white'}}
-                        elevation={3}
-                    >
+                        < Paper
+                            key={department.Department}
+                            style={{ background: 'white'}}
+                            elevation={3}
+                        >
                             {
                                 <Box style={styles.image}>
                                     <img
                                         src={`${process.env.PUBLIC_URL}/${department.image}`}
                                         alt={`${department.Department}`}
-                                        // style={styles.image}
                                     />
-                                    <h3>{department.Department}</h3>
+                                    <NavLink to={`/department/${department.Department}`}>
+                                        <h3>{department.Department}</h3>
+                                    </NavLink>
                                     <p>{department.Description}</p>
                                 </Box>
                             }
-                    </Paper>
+                        </Paper>
                 </Grid>
             )}
         </Grid>

@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import NavBar from './components/NavBar';
 import DepartmentPage from "./pages/DepartmentPage";
 import CollectionsPage from "./pages/CollectionsPage";
+import DepAndArtistInfoPage from "./pages/DepAndArtistInfoPage";
 
 
 export const theme = createTheme({
@@ -25,7 +26,8 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/department" element={<DepartmentPage />} />
-            {/*<Route path="/albums/:album_id" element={<AlbumInfoPage />} />*/}
+            <Route path="/artist/:groupId" element={<DepAndArtistInfoPage isArtist={true} />} />
+            <Route path="/department/:groupId" element={<DepAndArtistInfoPage isArtist={false} />} />
             <Route path="/collections" element={<CollectionsPage />} />
           </Routes>
         </BrowserRouter>

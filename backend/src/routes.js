@@ -98,7 +98,7 @@ const getRandomArtwork = async function (req, res) {
  * */
 // Artwork search
 // GET: /search_artwork
-const getArtworkByFilter = async function (req, res) {
+const getArtworksByFilter = async function (req, res) {
     const page = req.query.page === undefined ? 1 : con.escape(req.query.page);
     const pageSize = req.query.page_size === undefined ? 10 : con.escape(req.query.page_size);
 
@@ -124,11 +124,15 @@ const getArtworkByFilter = async function (req, res) {
     // artist and location info. Contains.
     const artist = req.query.artist === undefined ? "" : con.escape(req.query.artist);
     const country = req.query.location === undefined ? "" : con.escape(req.query.country);
+    const artistId = req.query.constituentID === undefined ? "" : con.escape(req.query.constituentID);
 
     let artistSubquery = "";
     let countrySubquery = "";
     if(artist !== "") {
         artistSubquery = `SELECT Artist.constituentID FROM Artist WHERE displayName LIKE '%${artist}%'`;
+    }
+    if(artistId !== "") {
+        artistSubquery = `SELECT Artist.constituentID FROM Artist WHERE Artist.constituentID = ${artistId}`;
     }
     if(country !== "") {
         countrySubquery = `SELECT Location.locationID FROM Location WHERE country LIKE '%${country}%'`;
@@ -154,7 +158,7 @@ const getArtworkByFilter = async function (req, res) {
         whereFlag = false;
     }
     if(department !== ""){
-        query = addCondition(query, `Artwork.department = '${department}'`, whereFlag);
+        query = addCondition(query, `Artwork.department Like ${department}`, whereFlag);
         whereFlag = false;
     }
     if(classification !== ""){
@@ -194,7 +198,7 @@ const getArtworkByFilter = async function (req, res) {
         whereFlag = false;
     }
 
-    query += `Order By Artwork.objectID Limit ${pageSize} Offset ${(page - 1) * pageSize}`;
+    query += ` Order By Artwork.objectID Limit ${pageSize} Offset ${(page - 1) * pageSize}`;
 
     con.query(query
         , (err, data) => {
@@ -505,7 +509,7 @@ module.exports = {
     getTopArtistsByFilter,
     getLocationById,
     getMetadataById,
-    getArtworkByFilter,
+    getArtworksByFilter,
     getArtworkInTopCulture,
     getAllArtists,
     getArtistById,
