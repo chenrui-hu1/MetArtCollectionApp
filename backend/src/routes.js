@@ -101,14 +101,11 @@ const getRandomArtwork = async function (req, res) {
 // Artwork search
 // GET: /search_artwork
 const getArtworkByFilter = async function (req, res) {
-    const page = req.query.page === '' ? 1 : parseInt(req.query.page);
-    const pageSize = req.query.page_size === '' ? 10 : parseInt(req.query.page_size);
-
+    const page = req.query.page === undefined ? 1 : con.escape(req.query.page);
+    const pageSize = req.query.page_size === undefined ? 10 : con.escape(req.query.page_size);
 
     // Selector
-    console.log(con.escape(req.query.is_highlight));
-    const isHightlight = req.query.is_highlight === undefined ? '' : con.escape(req.query.is_highlight).replaceAll(" ", "");
-    console.log(`isHightlight: ${isHightlight}`);
+    const isHightlight = req.query.is_highlight === undefined ? "" : con.escape(req.query.is_highlight);
     // const accessionYear = req.query.accession_year === undefined ? "" : con.escape(req.query.accession_year);
     const isPublicDomain = req.query.is_public_domain === undefined ? '' : con.escape(req.query.is_public_domain).replaceAll(" ", "");
     const objectBeginDate = req.query.object_begin_date === undefined ? '' : con.escape(req.query.object_begin_date).replaceAll(" ", "");
@@ -129,12 +126,16 @@ const getArtworkByFilter = async function (req, res) {
     // artist and location info. Contains.
     const artist = req.query.artist === undefined ? '' : con.escape(req.query.artist);
     const country = req.query.location === undefined ? '' : con.escape(req.query.location);
+    const artistId = req.query.constituentID === undefined ? '' : con.escape(req.query.constituentID);
 
     let artistSubquery = "SELECT Artist.constituentID FROM Artist";
     let countrySubquery = "SELECT Location.locationID FROM Location";
     if(artist !== "''") {
         artistSubquery = `SELECT Artist.constituentID FROM Artist WHERE artistDisplayName LIKE '%${artist.replaceAll("'","")}%'`;
         console.log(artistSubquery);
+    }
+    if(artistId !== "''") {
+        artistSubquery = `SELECT Artist.constituentID FROM Artist WHERE Artist.constituentID = ${artistId}`;
     }
     if(country !== "''") {
         countrySubquery = `SELECT Location.locationID FROM Location WHERE country LIKE '%${country.replaceAll("'","")}%'`;

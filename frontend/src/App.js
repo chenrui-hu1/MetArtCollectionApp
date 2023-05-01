@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { indigo, amber } from '@mui/material/colors';
 import { createTheme } from "@mui/material/styles";
@@ -7,7 +6,8 @@ import { createTheme } from "@mui/material/styles";
 import HomePage from './pages/HomePage';
 import NavBar from './components/NavBar';
 import DepartmentPage from "./pages/DepartmentPage";
-import CollectionsPage from "./pages/Songs";
+import CollectionsPage from "./pages/CollectionsPage";
+import DepAndArtistInfoPage from "./pages/DepAndArtistInfoPage";
 import LoginPage from "./pages/LoginPage";
 
 
@@ -29,7 +29,8 @@ export default function App() {
                     <Route path = "/login" element={<LoginPage />} />
                     <Route path="/home" element={<HomePage />} />
                     <Route path="/department" element={<DepartmentPage />} />
-                    {/*<Route path="/albums/:album_id" element={<AlbumInfoPage />} />*/}
+                    <Route path="/artist/:groupId" element={<DepAndArtistInfoPage isArtist={true} />} />
+                    <Route path="/department/:groupId" element={<DepAndArtistInfoPage isArtist={false} />} />
                     <Route path="/collections" element={<CollectionsPage />} />
                 </Routes>
             </BrowserRouter>

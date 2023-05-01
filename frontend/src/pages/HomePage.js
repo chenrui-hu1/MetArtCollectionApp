@@ -38,7 +38,7 @@ export default function HomePage() {
         {
             field:'artistDisplayName',
             headerName:'Artist Name',
-            renderCell: (row) => <NavLink to={`/artists/${row.constituentID}`}>{row.artistDisplayName}</NavLink>
+            renderCell: (row) => <NavLink to={`/artist/${row.constituentID}`}>{row.artistDisplayName}</NavLink>
         },
         {
             field:'num_artworks',

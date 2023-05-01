@@ -1,11 +1,13 @@
 const department_list =
 [
   {
+    "id": 'theAmericanWing',
     "Department": "The American Wing",
     "Description": "Ever since its establishment in 1870, the Museum has acquired important examples of American art. Today, the American Wing's ever-evolving collection comprises some 20,000 works by African American, Euro American, Native American, and Latin American artists, ranging from the colonial to early-modern period.",
     "image": "metDepartment/americanWing.jpg"
   },
   {
+    "id": "eurpoeanScupltureAndDecorativeArts",
     "Department": "European Sculpture and Decorative Arts",
     "Description": "The 50,000 objects in the Museum's comprehensive collection of European sculpture and decorative arts reflect the development of a number of art forms in Western European countries from the early fifteenth through the early twentieth century. ",
     "image": "metDepartment/europeanSculptureAndDecorativeArts.jpg"
@@ -26,11 +28,13 @@ const department_list =
     "image": "metDepartment/medievalArt.jpg"
   },
   {
+
     "Department": "Asian Art",
     "Description": "The Met's collection of Asian art—more than 35,000 objects, ranging in date from the third millennium B.C. to the twenty-first century—is one of the largest and most comprehensive in the world. ",
     "image": "metDepartment/asianArt.jpg"
   },
   {
+
     "Department": "Costume Institute",
     "Description": "The Costume Institute's collection of more than 33,000 costumes and accessories represents five continents and seven centuries of fashionable dress and accessories for men, women, and children, from the fifteenth century to the present.",
     "image": "metDepartment/costumeInstitute.jpg"

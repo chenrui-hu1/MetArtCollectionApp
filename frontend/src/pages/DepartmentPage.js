@@ -58,7 +58,9 @@ export default function DepartmentPage() {
                                 src={`${process.env.PUBLIC_URL}/${department.image}`}
                                 alt={`${department.Department}`}
                             />
-                            <h3 style={styles.title}>{department.Department}</h3>
+                            <NavLink to={`/department/${department.Department}`}>
+                                <h3 style={styles.title}>{department.Department}</h3>
+                            </NavLink>
                             <p style={styles.description}>{department.Description}</p>
                         </Box>
                     </Paper>
