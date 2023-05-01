@@ -135,13 +135,30 @@ export default function CollectionsPage() {
                 <Grid item xs={4}>
                     <FormControlLabel
                         label='Highlight'
-                        control={<Checkbox checked={highlight} onChange={(e) => setHighlight(e.target.checked)} />}
+                        control={<Checkbox checked={highlight} onChange={(e) => {
+                            setFormData({
+                                ...formData,
+                                is_highlight: e.target.checked,
+                            });
+                            setHighlight(e.target.checked);
+                        }
+                        } />}
                     />
                 </Grid>
                 <Grid item xs={4}>
                     <FormControlLabel
                         label='Public Domain'
-                        control={<Checkbox checked={isPublicDomain} onChange={(e) => setIsPublicDomain(e.target.checked)} />}
+                        control={<Checkbox checked={isPublicDomain} onChange={(e) => {
+                            setFormData(
+                                {
+                                    ...formData,
+                                    is_public_domain: e.target.checked,
+
+                                }
+                            );
+                            setIsPublicDomain(e.target.checked);
+                        }
+                        }/>}
                     />
                 </Grid>
                 <Grid item xs={6}>
