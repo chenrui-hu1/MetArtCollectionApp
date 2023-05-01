@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { indigo, amber } from '@mui/material/colors';
 import { createTheme } from "@mui/material/styles";

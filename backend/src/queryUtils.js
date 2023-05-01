@@ -1,8 +1,8 @@
 const addCondition = (query, condition, whereFlag) => {
     if (whereFlag) {
-        return query + `WHERE ${condition}`;
+        return query + `WHERE ${condition} `;
     } else {
-        return query + `AND ${condition}`;
+        return query + `AND ${condition} `;
     }
 }
 

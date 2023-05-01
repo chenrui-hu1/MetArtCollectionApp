@@ -69,7 +69,6 @@ export default function HomePage() {
                     <RefreshIcon fontSize='large' onClick={() => handleSeed()}/>
                 </Grid>
             </Grid>
-            {/*<LazyTable route={`http://${config.server_host}:${config.server_port}/random_artworks/100`} columns={collectionColumn} />*/}
             <Box>
                 <CollectionGrid
                     route={`http://${config.server_host}:${config.server_port}/random_artworks/12`}
