@@ -5,7 +5,7 @@ import {
     Checkbox,
     Container,
     FormControlLabel,
-    Grid,
+    Grid, InputLabel,
     Link,
     MenuItem,
     Select,
@@ -80,7 +80,8 @@ export default function CollectionsPage() {
             });
     }, []);
 
-    const search = () => {
+    const search = (e) => {
+        e.preventDefault();
         setFormData({
             ...formData,
             title: title,
@@ -170,55 +171,58 @@ export default function CollectionsPage() {
                         } />}
                     />
                 </Grid>
+
                 <Grid item xs={4}>
-                    <FormControlLabel
-                        label='Public Domain'
-                        control={<Checkbox checked={isPublicDomain} onChange={(e) => {
-                            if(e.target.checked === true){
-                                setFormData({
-                                    ...formData,
-                                    is_public_domain: 'True',
-                                });
-                            }else{
-                                setFormData({
-                                    ...formData,
-                                    is_public_domain: 'False',
-                                });
-                            }
-                            setIsPublicDomain(e.target.checked);
+                <FormControlLabel
+                    label='Public Domain'
+                    control={<Checkbox checked={isPublicDomain} onChange={(e) => {
+                        if(e.target.checked === true){
+                            setFormData({
+                                ...formData,
+                                is_public_domain: 'True',
+                            });
+                        }else{
+                            setFormData({
+                                ...formData,
+                                is_public_domain: 'False',
+                            });
                         }
-                        }/>}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <p>Begin Date</p>
-                    <Slider
-                        value={beginDate}
-                        min={1700}
-                        max={2021}
-                        step={1}
-                        onChange={(e, newValue) => setBeginDate(newValue)}
-                        valueLabelDisplay='auto'
-                        // valueLabelFormat={value => <div>{formatDuration(value)}</div>}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <p>End Date</p>
-                    <Slider
-                        value={endDate}
-                        min={1700}
-                        max={2021}
-                        step={1}
-                        onChange={(e, newValue) => setEndDate(newValue)}
-                        valueLabelDisplay='auto'
-                        valueLabelFormat={value => <div>{value}</div>}
-                    />
-                </Grid>
-
-                <Grid item xs={4}>
-                    <p>Department</p>
-
-                <Select name="department" value={formData.department} onChange={handleInputChange}>
+                        setIsPublicDomain(e.target.checked);
+                    }
+                    }/>}
+                />
+            </Grid>
+            <Grid item xs={6}>
+                <p>Begin Date</p>
+                <Slider
+                    value={beginDate}
+                    min={1700}
+                    max={2021}
+                    step={1}
+                    onChange={(e, newValue) => setBeginDate(newValue)}
+                    valueLabelDisplay='auto'
+                    // valueLabelFormat={value => <div>{formatDuration(value)}</div>}
+                />
+            </Grid>
+            <Grid item xs={6}>
+                <p>End Date</p>
+                <Slider
+                    value={endDate}
+                    min={1700}
+                    max={2021}
+                    step={1}
+                    onChange={(e, newValue) => setEndDate(newValue)}
+                    valueLabelDisplay='auto'
+                    valueLabelFormat={value => <div>{value}</div>}
+                />
+            </Grid>
+            <Grid item xs={4}>
+                <InputLabel>Department</InputLabel>
+                <Select name="department"
+                        value={formData.department}
+                        onChange={handleInputChange}
+                        style={{maxWidth:"300px"}}
+                >
                     <MenuItem value="">Select Department</MenuItem>
                     <MenuItem value="The American Wing">The American Wing</MenuItem>
                     <MenuItem value="Ancient Near Eastern Art">Ancient Near Eastern Art</MenuItem>
@@ -239,35 +243,43 @@ export default function CollectionsPage() {
                     <MenuItem value="Robert Lehman Collection">Robert Lehman Collection</MenuItem>
                 </Select>
 
-                </Grid>
-                <Grid item xs={4}>
-                    <p>Medium</p>
-                    <Select name="medium" value={formData.medium} onChange={handleInputChange}>
-                        <MenuItem value="">Select Medium</MenuItem>
-                        <MenuItem value="Albumen silver print">Albumen silver print</MenuItem>
-                        <MenuItem value="Albumen silver prints from glass negatives">Albumen silver prints from glass negatives</MenuItem>
-                        <MenuItem value="Albumen silver prints from paper negatives">Albumen silver prints from paper negatives</MenuItem>
-                        <MenuItem value="Albumen silver prints from paper negatives with applied color">Albumen silver prints from paper negatives with applied color</MenuItem>
-                        <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold">Albumen silver prints from paper negatives with applied color and applied gold</MenuItem>
-                        <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives</MenuItem>
-                        <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives</MenuItem>
-                        <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives, and albumen silver prints from paper negatives with applied color">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives, and albumen silver prints from paper negatives with applied color</MenuItem>
+            </Grid>
+            <Grid item xs={4}>
+                <InputLabel>Medium</InputLabel>
+                <Select name="medium"
+                        value={formData.medium}
+                        onChange={handleInputChange}
+                        style={{maxWidth:"300px"}}
+                >
+                    <MenuItem value="">Select Medium</MenuItem>
+                    <MenuItem value="Albumen silver print">Albumen silver print</MenuItem>
+                    <MenuItem value="Albumen silver prints from glass negatives">Albumen silver prints from glass negatives</MenuItem>
+                    <MenuItem value="Albumen silver prints from paper negatives">Albumen silver prints from paper negatives</MenuItem>
+                    <MenuItem value="Albumen silver prints from paper negatives with applied color">Albumen silver prints from paper negatives with applied color</MenuItem>
+                    <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold">Albumen silver prints from paper negatives with applied color and applied gold</MenuItem>
+                    <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives</MenuItem>
+                    <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives</MenuItem>
+                    <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives, and albumen silver prints from paper negatives with applied color">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives, and albumen silver prints from paper negatives with applied color</MenuItem>
 
-                    </Select>
-                </Grid>
-                <Grid item xs={4}>
-                    <p>Artist</p>
-                    <Select name="Artist" value={formData.artist} onChange={handleInputChange}>
-                        <MenuItem value="">Select Artist</MenuItem>
-                        <MenuItem value="Christian Gobrecht">Christian Gobrecht</MenuItem>
-                        <MenuItem value="A. N. Cook & Company">A. N. Cook & Company</MenuItem>
-                        <MenuItem value="Aaron Martinet">Aaron Martinet</MenuItem>
-                        <MenuItem value="Aaron Willard">Aaron Willard</MenuItem>
-                        <MenuItem value="萩谷勝平 Hagiya Katsuhiras">萩谷勝平 Hagiya Katsuhira</MenuItem>
-                        <MenuItem value="Zacharias Täschler">Zacharias Täschler</MenuItem>
-                        <MenuItem value="Workshop of Botticelli">Workshop of Botticelli</MenuItem>
-                    </Select>
-                </Grid>
+                </Select>
+            </Grid>
+            <Grid item xs={4}>
+                <InputLabel>Artist</InputLabel>
+                <Select name="artist"
+                        value={formData.artist}
+                        onChange={handleInputChange}
+                        style={{maxWidth:"200px"}}
+                >
+                    <MenuItem value="">Select Artist</MenuItem>
+                    <MenuItem value="Christian Gobrecht">Christian Gobrecht</MenuItem>
+                    <MenuItem value="A. N. Cook & Company">A. N. Cook & Company</MenuItem>
+                    <MenuItem value="Aaron Martinet">Aaron Martinet</MenuItem>
+                    <MenuItem value="Aaron Willard">Aaron Willard</MenuItem>
+                    <MenuItem value="萩谷勝平 Hagiya Katsuhiras">萩谷勝平 Hagiya Katsuhira</MenuItem>
+                    <MenuItem value="Zacharias Täschler">Zacharias Täschler</MenuItem>
+                    <MenuItem value="Workshop of Botticelli">Workshop of Botticelli</MenuItem>
+                </Select>
+            </Grid>
 
 
 
@@ -310,7 +322,7 @@ export default function CollectionsPage() {
                 {/*    />*/}
                 {/*</Grid>*/}
             </Grid>
-            <Button onClick={() => search() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
+            <Button onClick={(e) => search(e) } style={{ left: '50%', transform: 'translateX(-50%)' }}>
                 Search
             </Button>
             <h2>Results</h2>

@@ -112,7 +112,6 @@ const getArtworksByFilter = async function (req, res) {
     const objectEndDate = req.query.object_end_date === undefined ? '' : parseInt(req.query.object_end_date);
     const department = req.query.department === undefined ? '' : con.escape(req.query.department);
 
-    console.log(`req.query.object_begin_date: ${req.query.object_begin_date}` + " :" + parseInt(req.query.object_begin_date));
 
     // dropdown box
     const classification = req.query.classification === undefined ? '' : con.escape(req.query.classification);
@@ -162,7 +161,6 @@ const getArtworksByFilter = async function (req, res) {
         whereFlag = false;
     }
     if(department !== ""){
-        console.log("department: " + department + " :" + department.length);
         query = addCondition(query, `Artwork.department = ${department} `, whereFlag);
         whereFlag = false;
     }
@@ -179,7 +177,6 @@ const getArtworksByFilter = async function (req, res) {
         whereFlag = false;
     }
     if(titleInitial !== ""){
-        console.log("titleInitial: " + titleInitial);
         query = addCondition(query, `Artwork.title Like '%${titleInitial.replaceAll("'","")}%'`, whereFlag);
         whereFlag = false;
     }
@@ -193,7 +190,6 @@ const getArtworksByFilter = async function (req, res) {
     }
     if(medium !== ""){
         query = addCondition(query, `(Artwork.medium Like '%${medium.replaceAll("'","")}%'OR TRIM(Artwork.medium) Like '%${medium.replaceAll("'","")}%')`, whereFlag);
-        console.log(query);
         whereFlag = false;
     }
     if(artistSubquery !== ""){
