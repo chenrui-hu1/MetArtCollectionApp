@@ -1,13 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import {Container, Divider, Grid, Link} from '@mui/material';
+import {Box, Container, Divider, Grid, Link} from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import RefreshIcon  from '@mui/icons-material/Refresh';
-
 import LazyTable from '../components/LazyTable';
 import CollectionCard from '../components/CollectionCard';
-
-
 import axios from 'axios';
 import CollectionGrid from "../components/CollectionGrid";
 const config = require('../config.json');
@@ -16,6 +13,8 @@ export default function HomePage() {
     const [collectionOfTheDay, setCollectionOfTheDay] = useState({});
 
     const [selectedCollectionId, setSelectedCollectionId] = useState(null);
+
+    const [seed, setSeed] = useState(0);
 
 
     useEffect( () => {
@@ -30,26 +29,10 @@ export default function HomePage() {
         getRandomArtwork().then(data => setCollectionOfTheDay(data[0]));
     }, []);
 
-    // const collectionColumn = [
-    //     {
-    //         field: 'title',
-    //         headerName: 'Collection Title',
-    //         renderCell: (row) => <Link onClick={() => setSelectedCollectionId(row.objectID)}>{row.title}</Link> // A Link component is used just for formatting purposes
-    //     },
-    //     {
-    //         field: 'objectName',
-    //         headerName: 'Object Name',
-    //     },
-    //     {
-    //         field: 'artistDisplayName',
-    //         headerName: 'Artist Name',
-    //         renderCell: (row) => <NavLink to={`/artists/${row.constituentID}`}>{row.artistDisplayName}</NavLink>
-    //     },
-    //     {
-    //         field: 'culture',
-    //         headerName: 'Culture'
-    //     },
-    // ];
+    const handleSeed = () => {
+        console.log("seed");
+        setSeed(Math.random());
+    }
 
     const artistColumn = [
         {
@@ -83,11 +66,16 @@ export default function HomePage() {
                     <h2>Top Collections</h2>
                 </Grid>
                 <Grid item xs={6} style={{marginTop:'20px'}}>
-                    <RefreshIcon fontSize='large'/>
+                    <RefreshIcon fontSize='large' onClick={() => handleSeed()}/>
                 </Grid>
             </Grid>
             {/*<LazyTable route={`http://${config.server_host}:${config.server_port}/random_artworks/100`} columns={collectionColumn} />*/}
-            <CollectionGrid route={`http://${config.server_host}:${config.server_port}/random_artworks/12`}/>
+            <Box>
+                <CollectionGrid
+                    route={`http://${config.server_host}:${config.server_port}/random_artworks/12`}
+                    seed={seed}
+                />
+            </Box>
             <Divider />
             <h2>Top Artists</h2>
             <LazyTable route={`http://${config.server_host}:${config.server_port}/top_artists`}
