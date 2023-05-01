@@ -7,7 +7,7 @@ import { createTheme } from "@mui/material/styles";
 import HomePage from './pages/HomePage';
 import NavBar from './components/NavBar';
 import DepartmentPage from "./pages/DepartmentPage";
-import CollectionsPage from "./pages/CollectionsPage";
+import CollectionsPage from "./pages/Songs";
 import LoginPage from "./pages/LoginPage";
 
 
