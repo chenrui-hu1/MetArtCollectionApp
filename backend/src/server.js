@@ -2,9 +2,20 @@ const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');
 const mongoose = require('mongoose');
-require('dotenv').config()
+require('dotenv').config();
+
+const https = require('https');
+const fs = require('fs');
+
+
+//https
+// Load the SSL certificate and key
+const privateKey = fs.readFileSync('key.pem');
+const certificate = fs.readFileSync('cert.pem');
+const credentials = { key: privateKey, cert: certificate };
 
 const app = express();
+
 
 const querystring = require('querystring');
 const mysql = require("mysql");
@@ -24,6 +35,13 @@ app.use((req, res, next) => {
     req.query = querystring.parse(req.url.split('?')[1]);
     next();
 });
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 
 const con = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -108,10 +126,21 @@ app.get('/location/:location_id', routes.getLocationById);
 app.get('/metadata/:metadata_id', routes.getMetadataById);
 app.get('/top_artists', routes.getTopArtists);
 
-const server = app.listen(process.env.SERVER_PORT, () => {
-    console.log(`Server running at http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/`)
+const httpsServer = https.createServer(credentials, app);
+
+// Start the HTTPS server
+httpsServer.listen(443, () => {
+    console.log(`HttpServer running at https://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/`)
+});
+httpsServer.on('error', (err) => {
+    console.error(`httpsServer error: ${err.message}`);
 });
 
-server.on('error', (err) => {
-    console.error(`Server error: ${err.message}`);
-});
+// const server = app.listen(process.env.SERVER_PORT, () => {
+//     console.log(`Server running at http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/`)
+// });
+//
+// server.on('error', (err) => {
+//     console.error(`Server error: ${err.message}`);
+// });
+

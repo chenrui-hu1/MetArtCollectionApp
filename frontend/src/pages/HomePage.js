@@ -20,7 +20,7 @@ export default function HomePage() {
     useEffect( () => {
         async function getRandomArtwork() {
             try{
-                const res = await axios.get(`http://${config.server_host}:${config.server_port}/random_artworks/1`);
+                const res = await axios.get(`${config.server_protocol}${config.server_host}:${config.server_port}/random_artworks/1`);
                 return res.data;
             }catch (err){
                 console.log(err);
@@ -71,13 +71,13 @@ export default function HomePage() {
             </Grid>
             <Box>
                 <CollectionGrid
-                    route={`http://${config.server_host}:${config.server_port}/random_artworks/12`}
+                    route={`${config.server_protocol}${config.server_host}:${config.server_port}/random_artworks/12`}
                     seed={seed}
                 />
             </Box>
             <Divider />
             <h2>Top Artists</h2>
-            <LazyTable route={`http://${config.server_host}:${config.server_port}/top_artists`}
+            <LazyTable route={`${config.server_protocol}${config.server_host}:${config.server_port}/top_artists`}
                        columns={artistColumn}
                        defaultPageSize={5}
                        rowsPerPageOptions={[5, 10]} />

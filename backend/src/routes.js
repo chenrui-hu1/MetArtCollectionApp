@@ -219,8 +219,6 @@ const getArtworksByFilter = async function (req, res) {
 // GET: /top_culture_artworks
 const getArtworkInTopCulture = async function (req, res) {
     const culture = req.query.culture === undefined ? "'American'" : con.escape(req.query.culture);
-    console.log(con.escape(req.query.culture));
-    console.log(culture);
     const page = req.query.page === undefined ? 1 : con.escape(req.query.page);
     const pageSize = req.query.page_size === undefined ? 10 : con.escape(req.query.page_size);
     con.query(`SELECT * FROM Artwork WHERE culture = ${culture} Order By objectID Limit ${pageSize} Offset ${(page - 1) * pageSize}`, (err, data) => {

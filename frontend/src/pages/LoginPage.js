@@ -20,7 +20,7 @@ export default function LoginPage() {
             return;
         }
         try {
-            const response = await fetch(`http://${config.server_host}:${config.server_port}/api/login`, {
+            const response = await fetch(`${config.server_protocol}${config.server_host}:${config.server_port}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ export default function LoginPage() {
             return;
         }
 
-        const response = await fetch(`http://${config.server_host}:${config.server_port}/api/register`, {
+        const response = await fetch(`${config.server_protocol}${config.server_host}:${config.server_port}/api/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

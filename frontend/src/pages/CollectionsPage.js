@@ -64,14 +64,12 @@ export default function CollectionsPage() {
         let str = "";
         for(let key of Object.keys(formData)){
             if(formData[key] != ""){
-                console.log(key + ":" + formData[key] + ",len:" + formData[key].length);
                 str += key + "=" + formData[key] + "&";
             }
         }
         str = str.substring(0, str.length - 1);
-        console.log(str);
         // console.log(queryParams);
-        fetch(`http://${config.server_host}:${config.server_port}/search_artworks?${str}`)
+        fetch(`${config.server_protocol}${config.server_host}:${config.server_port}/search_artworks?${str}`)
             .then(res => res.json())
             .then(resJson => {
                 const objectId = resJson.map((collecion) => ({ id: collecion.objectID, ...collecion }));
@@ -96,14 +94,13 @@ export default function CollectionsPage() {
         let str = "";
         for(let key of Object.keys(formData)){
             if(formData[key] != ""){
-                console.log(key + ":" + formData[key] + ",len:" + formData[key].length);
                 str += key + "=" + formData[key] + "&";
             }
         }
 
         const queryParams = new URLSearchParams(str).toString();
         console.log(queryParams);
-        fetch(`http://${config.server_host}:${config.server_port}/search_artworks?${queryParams}`)
+        fetch(`${config.server_protocol}${config.server_host}:${config.server_port}/search_artworks?${queryParams}`)
             .then((res) => res.json())
             .then(resJson => {
                 console.log(resJson);

@@ -22,7 +22,7 @@ export default function DepAndArtistInfoPage({isArtist}) {
 
         async function fetchGroupData(){
             if(isArtist === true){
-                const response = await axios.get(`http://${config.server_host}:${config.server_port}/artist/${groupId}`)
+                const response = await axios.get(`${config.server_protocol}${config.server_host}:${config.server_port}/artist/${groupId}`)
                 setGroupData(response.data);
             }else{
                 const item = department_list.filter((dep) => dep.Department === groupId);
@@ -36,10 +36,10 @@ export default function DepAndArtistInfoPage({isArtist}) {
                 console.log(`groupId: ${groupId}`);
                 console.log(`groupData: ${groupData}`);
                 console.log(`http://${config.server_host}:${config.server_port}/search_artworks?constituentID=${groupId}`);
-                const response = await axios.get(`http://${config.server_host}:${config.server_port}/search_artworks?constituentID=${groupId}`);
+                const response = await axios.get(`${config.server_protocol}${config.server_host}:${config.server_port}/search_artworks?constituentID=${groupId}`);
                 setCollectionData(response.data);
             }else{
-                const response = await axios.get(`http://${config.server_host}:${config.server_port}/search_artworks?department=${groupId}`);
+                const response = await axios.get(`${config.server_protocol}${config.server_host}:${config.server_port}/search_artworks?department=${groupId}`);
                 console.log(`groupData: ${groupData}`);
                 setCollectionData(response.data);
             }
