@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Checkbox, FormControlLabel, Select, MenuItem, Button } from '@material-ui/core';
+import { TextField, Checkbox, FormControlLabel, Select, MenuItem, Button } from '@mui/material';
 const config = require('../config.json');
 export default function CollectionsPage(){
     const [formData, setFormData] = useState({
