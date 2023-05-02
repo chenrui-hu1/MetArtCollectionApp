@@ -1,24 +1,24 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import {Grid, Box, Button, ButtonGroup, Link, Modal } from '@mui/material';
+import {Grid, Box, Modal } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 import axios from 'axios';
 
 const config = require('../config.json');
 
-export default function CollectionCard({ songId, handleClose }) {
+export default function CollectionCard({ collectionId, handleClose }) {
   const [collectionData, setCollectionData] = useState({});
   const [artistData, setArtistData] = useState({});
 
   useEffect(() => {
-    axios.get(`http://${config.server_host}:${config.server_port}/artwork/${songId}`)
+    axios.get(`${config.server_protocol}${config.server_host}:${config.server_port}/artwork/${collectionId}`)
         .then(res => res.data)
         .then(resJson => {
           setCollectionData(resJson);
-          axios.get(`http://${config.server_host}:${config.server_port}/artist/${resJson.constituentID}`)
+          axios.get(`${config.server_protocol}${config.server_host}:${config.server_port}/artist/${resJson.constituentID}`)
               .then(res => res.data)
-              .then(resJson => setArtistData(resJson));
+              .then(data => setArtistData(data));
         });
     }, []);
 
@@ -27,18 +27,14 @@ export default function CollectionCard({ songId, handleClose }) {
     <Modal
       open={true}
       onClose={handleClose}
-      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', Top:"25%", Left:"25%", marginLeft:"25%"}}
     >
       <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <Box>
-            <img src={collectionData.primaryImage} alt={collectionData.title} />
-          </Box>
-        </Grid>
-        <Grid item xs={6}>
+
+        <Grid item xs={6} style={{position:"center"}}>
           <Box
               p={3}
-              style={{ background: 'white', borderRadius: '16px', border: '2px solid #000', width: 600 }}
+              style={{ background: 'white', borderRadius: '16px', border: '2px solid gray', width: 600 }}
           >
             <h1>{collectionData.title}</h1>
             <h2>Artist:&nbsp;

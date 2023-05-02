@@ -56,7 +56,7 @@ export default function HomePage() {
 
     return (
         <Container>
-            {selectedCollectionId && <CollectionCard songId={selectedCollectionId} handleClose={() => setSelectedCollectionId(null)} />}
+            {selectedCollectionId && <CollectionCard collectionId={selectedCollectionId} handleClose={() => setSelectedCollectionId(null)} />}
             <h2>Your Random Collection Today:&nbsp;
                 <Link onClick={() => setSelectedCollectionId(collectionOfTheDay.objectID)}>{collectionOfTheDay.title}</Link>
             </h2>

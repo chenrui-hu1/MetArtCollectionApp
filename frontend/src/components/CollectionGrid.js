@@ -69,12 +69,7 @@ export default function CollectionGrid({route, seed}){
             <Modal
                 open={modalOpen}
                 onClose={handleCloseModal}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
-                style={{ alignItems: "center", justifyContent: "center", maxWidth:"500px", maxHeight:"500px", position:"absolute", top:"25%", left:"25%"}}
+                style={{ alignSelf: "center", justifyContent: "center", maxWidth:"500px", maxHeight:"500px", position:"absolute", top:"25%", left:"25%"}}
             >
                 <Box in={modalOpen}>
                     <div>
