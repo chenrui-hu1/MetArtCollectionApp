@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
-import SongCard from '../components/SongCard';
+import ModalCard from '../components/ModalCard';
 
 const config = require('../config.json');
 
@@ -68,7 +68,7 @@ export default function CollectionsPage() {
             }
         }
         str = str.substring(0, str.length - 1);
-        // console.log(queryParams);
+        console.log(str);
         fetch(`${config.server_protocol}${config.server_host}:${config.server_port}/search_artworks?${str}`)
             .then(res => res.json())
             .then(resJson => {
@@ -76,14 +76,14 @@ export default function CollectionsPage() {
                 setData(objectId);
                 console.log(objectId);
             });
-    }, []);
+    }, [formData]);
 
     const search = (e) => {
-        e.preventDefault();
         setFormData({
             ...formData,
             title: title,
-            is_highlight: highlight,
+            is_highlight: highlight === true ? 'True' : 'False',
+            is_public_domain: isPublicDomain === true ? 'True' : 'False',
             object_begin_date: beginDate,
             object_end_date: endDate,
             department: department,
@@ -91,28 +91,24 @@ export default function CollectionsPage() {
             medium: medium,
         });
 
-        let str = "";
-        for(let key of Object.keys(formData)){
-            if(formData[key] != ""){
-                str += key + "=" + formData[key] + "&";
-            }
-        }
-
-        const queryParams = new URLSearchParams(str).toString();
-        console.log(queryParams);
-        fetch(`${config.server_protocol}${config.server_host}:${config.server_port}/search_artworks?${queryParams}`)
-            .then((res) => res.json())
-            .then(resJson => {
-                console.log(resJson);
-                const objectId = resJson.map((collecion) => ({ id: collecion.objectID, ...collecion }));
-                setData(objectId);
-            });
+        // let str = "";
+        // for(let key of Object.keys(formData)){
+        //     if(formData[key] != ""){
+        //         str += key + "=" + formData[key] + "&";
+        //     }
+        // }
+        //
+        // const queryParams = new URLSearchParams(str).toString();
+        // console.log(queryParams);
+        // fetch(`${config.server_protocol}${config.server_host}:${config.server_port}/search_artworks?${queryParams}`)
+        //     .then((res) => res.json())
+        //     .then(resJson => {
+        //         console.log(resJson);
+        //         const objectId = resJson.map((collecion) => ({ id: collecion.objectID, ...collecion }));
+        //         setData(objectId);
+        //     });
     }
 
-    // This defines the columns of the table of songs used by the DataGrid component.
-    // The format of the columns array and the DataGrid component itself is very similar to our
-    // LazyTable component. The big difference is we provide all data to the DataGrid component
-    // instead of loading only the data we need (which is necessary in order to be able to sort by column)
     const columns = [
         {
             field: 'title',
@@ -132,17 +128,9 @@ export default function CollectionsPage() {
         { field: 'medium', headerName: 'Medium',width: 200}
     ];
 
-
-    // This component makes uses of the Grid component from MUI (https://mui.com/material-ui/react-grid/).
-    // The Grid component is super simple way to create a page layout. Simply make a <Grid container> tag
-    // (optionally has spacing prop that specifies the distance between grid items). Then, enclose whatever
-    // component you want in a <Grid item xs={}> tag where xs is a number between 1 and 12. Each row of the
-    // grid is 12 units wide and the xs attribute specifies how many units the grid item is. So if you want
-    // two grid items of the same size on the same row, define two grid items with xs={6}. The Grid container
-    // will automatically lay out all the grid items into rows based on their xs values.
     return (
         <Container>
-            {selectedObjectID && <SongCard collectionId={selectedObjectID} handleClose={() => setObjectID(null)} />}
+            {selectedObjectID && <ModalCard collectionId={selectedObjectID} handleClose={() => setObjectID(null)} />}
             <h2>Search Collections</h2>
             <Grid container spacing={6}>
                 <Grid item xs={4}>
@@ -152,17 +140,6 @@ export default function CollectionsPage() {
                     <FormControlLabel
                         label='Highlight'
                         control={<Checkbox checked={highlight} onChange={(e) => {
-                            if(e.target.checked === true){
-                                setFormData({
-                                    ...formData,
-                                    is_highlight: 'True',
-                                });
-                            }else{
-                                setFormData({
-                                    ...formData,
-                                    is_highlight: 'False',
-                                });
-                            }
                             setHighlight(e.target.checked);
                         }
                         } />}
@@ -173,17 +150,6 @@ export default function CollectionsPage() {
                 <FormControlLabel
                     label='Public Domain'
                     control={<Checkbox checked={isPublicDomain} onChange={(e) => {
-                        if(e.target.checked === true){
-                            setFormData({
-                                ...formData,
-                                is_public_domain: 'True',
-                            });
-                        }else{
-                            setFormData({
-                                ...formData,
-                                is_public_domain: 'False',
-                            });
-                        }
                         setIsPublicDomain(e.target.checked);
                     }
                     }/>}
@@ -277,53 +243,11 @@ export default function CollectionsPage() {
                     <MenuItem value="Workshop of Botticelli">Workshop of Botticelli</MenuItem>
                 </Select>
             </Grid>
-
-
-
-                {/* (TASK 24): add sliders for danceability, energy, and valence (they should be all in the same row of the Grid) */}
-                {/* Hint: consider what value xs should be to make them fit on the same row. Set max, min, and a reasonable step. Is valueLabelFormat is necessary? */}
-                {/*<Grid item xs={4}>*/}
-                {/*    <p>Department</p>*/}
-                {/*    <Slider*/}
-                {/*        value={department}*/}
-                {/*        min={0}*/}
-                {/*        max={1}*/}
-                {/*        step={0.1}*/}
-                {/*        onChange={(e, newValue) => setDanceability(newValue)}*/}
-                {/*        valueLabelDisplay='auto'*/}
-                {/*        valueLabelFormat={value => <div>{value}</div>}*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={4}>*/}
-                {/*    <p>Energy</p>*/}
-                {/*    <Slider*/}
-                {/*        value={energy}*/}
-                {/*        min={0}*/}
-                {/*        max={1}*/}
-                {/*        step={0.1}*/}
-                {/*        onChange={(e, newValue) => setEnergy(newValue)}*/}
-                {/*        valueLabelDisplay='auto'*/}
-                {/*        valueLabelFormat={value => <div>{value}</div>}*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={4}>*/}
-                {/*    <p>Valence</p>*/}
-                {/*    <Slider*/}
-                {/*        value={valence}*/}
-                {/*        min={0}*/}
-                {/*        max={1}*/}
-                {/*        step={0.1}*/}
-                {/*        onChange={(e, newValue) => setValence(newValue)}*/}
-                {/*        valueLabelDisplay='auto'*/}
-                {/*        valueLabelFormat={value => <div>{value}</div>}*/}
-                {/*    />*/}
-                {/*</Grid>*/}
             </Grid>
             <Button onClick={(e) => search(e) } style={{ left: '50%', transform: 'translateX(-50%)' }}>
                 Search
             </Button>
             <h2>Results</h2>
-            {/* Notice how similar the DataGrid component is to our LazyTable! What are the differences? */}
             <DataGrid
                 rows={data}
                 columns={columns}

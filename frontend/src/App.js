@@ -1,6 +1,6 @@
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import { CssBaseline, ThemeProvider } from '@mui/material';
-import { indigo, amber } from '@mui/material/colors';
+import { pink, amber } from '@mui/material/colors';
 import { createTheme } from "@mui/material/styles";
 
 import HomePage from './pages/HomePage';
@@ -13,7 +13,7 @@ import LoginPage from "./pages/LoginPage";
 
 export const theme = createTheme({
     palette: {
-        primary: indigo,
+        primary: pink,
         secondary: amber,
     },
 });

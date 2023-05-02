@@ -1,16 +1,12 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import {Grid, Modal, Backdrop, Fade, Container, Box} from '@mui/material';
+import {Grid, Modal, Backdrop, Fade, Container, Box, Paper} from '@mui/material';
 
 import axios from 'axios';
 
-const flexFormat = { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly', xs:'6', sm:'3', maxWidth: '30%' };
-const imageFormat = { width: '100%', objectFit:'contain'};
 
 const grid_style = {
     container: {
-        // display: 'flex',
-        // flexDirection: 'row',
         width: '3',
         height: '200px',
         justifyContent: 'space-evenly',
@@ -18,7 +14,6 @@ const grid_style = {
         background: 'white',
         borderRadius: '10px',
         padding: '10px',
-        border: '2px solid gray',
     },
     image: {
         width: '100%',
@@ -57,36 +52,17 @@ export default function CollectionGrid({route, seed}){
 
     return (
         <div>
-            {/*<Container style={flexFormat}>*/}
-            {/*    {collectionList.map((collection) =>*/}
-            {/*        <Box*/}
-            {/*            key={collection.collectionID}*/}
-            {/*            p={3}*/}
-            {/*            m={2}*/}
-            {/*            style={{ background: 'white', borderRadius: '16px', border: '2px solid #000'}}*/}
-            {/*        >*/}
-            {/*            {*/}
-            {/*                <img*/}
-            {/*                    src={collection.primaryImage}*/}
-            {/*                    alt={`${collection.title}`}*/}
-            {/*                    style={imageFormat}*/}
-            {/*                    onClick={() => handleOpenModal(collection)}*/}
-            {/*                />*/}
-            {/*            }*/}
-            {/*        </Box>*/}
-            {/*    )}*/}
-            {/*</Container>*/}
             <Grid container spacing={2}>
                 {collectionList.map((collection) => (
                     <Grid item xs={6} sm={3} key={collection.objectID}>
-                        <Box style={grid_style.container}>
+                        <Paper style={grid_style.container}>
                             <img
                                 style={grid_style.image}
                                 src={collection.primaryImage}
                                 alt={`${collection.title}`}
                                 onClick={() => handleOpenModal(collection)}
                             />
-                        </Box>
+                        </Paper>
                     </Grid>
                 ))}
             </Grid>
@@ -98,18 +74,19 @@ export default function CollectionGrid({route, seed}){
                 BackdropProps={{
                     timeout: 500,
                 }}
+                style={{ alignItems: "center", justifyContent: "center", maxWidth:"500px", maxHeight:"500px", position:"absolute", top:"25%", left:"25%"}}
             >
-                <Fade in={modalOpen}>
+                <Box in={modalOpen}>
                     <div>
                         {selectedCollectionImage && (
                             <img
                                 src={selectedCollectionImage.primaryImage}
                                 alt={`Image ${selectedCollectionImage.title}`}
-                                style={{ maxWidth: "100%" }}
+                                style={{ maxWidth: "100%", overflow: "hidden"}}
                             />
                         )}
                     </div>
-                </Fade>
+                </Box>
             </Modal>
         </div>
     );
