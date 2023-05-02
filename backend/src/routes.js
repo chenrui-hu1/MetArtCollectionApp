@@ -218,15 +218,25 @@ const getArtworksByFilter = async function (req, res) {
 
     query += `Order By Artwork.objectID Limit ${pageSize} Offset ${(page - 1) * pageSize}`;
 
-    con.query(query
-        , (err, data) => {
-            if (err || data.length === 0) {
-                console.log(err);
-                res.json([]);
-            } else {
-                res.json(data);
-            }
-        });
+    const cacheKey = `getArtworks${query}`;
+    queryDatabase(query, cacheKey, (err, data) => {
+        if (err) {
+            console.log(err);
+            res.json([]);
+        } else {
+            res.json(data);
+        }
+    })
+
+    // con.query(query
+    //     , (err, data) => {
+    //         if (err || data.length === 0) {
+    //             console.log(err);
+    //             res.json([]);
+    //         } else {
+    //             res.json(data);
+    //         }
+    //     });
 }
 
 
