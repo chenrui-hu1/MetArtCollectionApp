@@ -2,6 +2,7 @@ const mysql = require('mysql')
 
 const mongoose = require('mongoose');
 const {addCondition} = require("./queryUtils");
+const cache = require("memory-cache");
 
 require('dotenv').config()
 
@@ -14,6 +15,24 @@ const con = mysql.createConnection({
     database: process.env.DB_NAME
 });
 con.connect((err) => err && console.log(err));
+
+
+// Here is the cache
+function queryDatabase(query, cacheKey, callback) {
+    const cachedResult = cache.get(cacheKey);
+    if (cachedResult) {
+        callback(null, cachedResult);
+    } else {
+        con.query(query, (err, result) => {
+            if (err) {
+                callback(err, null);
+            } else {
+                cache.put(cacheKey, result, 60000);
+                callback(null, result);
+            }
+        });
+    }
+}
 
 // Here are all routes.
 
@@ -38,11 +57,7 @@ const getAllArtworks = async function (req, res) {
 // GET: /complete_artwork/:artwork_id
 const getCompleteArtworkById = async function (req, res) {
 
-
-
-    console.log(`req.params.artwork_id: ${req.params.artwork_id}`);
     const artworkId = con.escape(req.params.artwork_id);
-    console.log(`artworkId: ${artworkId}`);
 
     con.query(`
                 SELECT *
@@ -416,15 +431,15 @@ const getTopArtists = async function (req, res) {
         LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
         `;
 
-    con.query(query
-        , (err, data) => {
-            if (err || data.length === 0) {
-                console.log(err);
-                res.json([]);
-            } else {
-                res.json(data);
-            }
-        });
+    const cacheKey = `top_artists_${page}_${pageSize}`;
+    queryDatabase(query, cacheKey, (err, result) => {
+        if (err) {
+            console.log(err);
+            res.json([]);
+        } else {
+            res.json(result);
+        }
+    });
 }
 
 
