@@ -31,7 +31,7 @@ export default function ModalCard({ collectionId, handleClose }) {
 
   useEffect(() => {
     const queryParams = new URLSearchParams().toString();
-    fetch(`http://${config.server_host}:${config.server_port}/artworks/${collectionId}`)
+    fetch(`${config.server_protocol}${config.server_host}:${config.server_port}/artwork/${collectionId}`)
         .then(res => res.json())
         .then(resJson => {
             setCollectionData(resJson);
@@ -39,8 +39,8 @@ export default function ModalCard({ collectionId, handleClose }) {
   }, []);
 
   const chartData = [
-    { name: 'BeginDate', value: collectionData.objectBeginDate },
-    { name: 'EndDate', value: collectionData.objectEndDate },
+    { name: 'BeginDate', value: collectionData.object_begin_date },
+    { name: 'EndDate', value: collectionData.object_end_date },
   ];
 
   const handleGraphChange = () => {
@@ -75,7 +75,7 @@ export default function ModalCard({ collectionId, handleClose }) {
                     layout='vertical'
                     margin={{ left: 40 }}
                   >
-                    <XAxis type='number' domain={[0, 1]} />
+                    <XAxis type='number' domain={[1000,2000]} />
                     <YAxis type='category' dataKey='name' />
                     <Bar dataKey='value' stroke='#8884d8' fill='#8884d8' />
                   </BarChart>
@@ -88,7 +88,7 @@ export default function ModalCard({ collectionId, handleClose }) {
                   <RadarChart outerRadius={90} width={730} height={250} data={chartData}>
                     <PolarGrid />
                     <PolarAngleAxis dataKey="name" />
-                    <PolarRadiusAxis angle={30} domain={[0, 1]} dataKey="value"/>
+                    <PolarRadiusAxis angle={30} domain={[1000,2000]} dataKey="value"/>
                     {/*<Radar dataKey="value" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />*/}
                     <Radar dataKey="value" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
                   </RadarChart>

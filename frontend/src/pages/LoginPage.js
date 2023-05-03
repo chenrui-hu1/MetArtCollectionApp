@@ -20,6 +20,7 @@ export default function LoginPage() {
             return;
         }
         try {
+            console.log(`${config.server_protocol}${config.server_host}:${config.server_port}/api/login`)
             const response = await fetch(`${config.server_protocol}${config.server_host}:${config.server_port}/api/login`, {
                 method: 'POST',
                 headers: {

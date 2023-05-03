@@ -12,6 +12,7 @@ export default function CollectionCard({ collectionId, handleClose }) {
   const [artistData, setArtistData] = useState({});
 
   useEffect(() => {
+    console.log(`https://${config.server_host}:${config.server_port}/artwork/${collectionId}`);
     axios.get(`${config.server_protocol}${config.server_host}:${config.server_port}/artwork/${collectionId}`)
         .then(res => res.data)
         .then(resJson => {

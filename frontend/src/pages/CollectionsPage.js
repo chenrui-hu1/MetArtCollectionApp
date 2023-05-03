@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
-import ModalCard from '../components/ModalCard';
+import CollectionCard from "../components/CollectionCard";
 
 const config = require('../config.json');
 
@@ -25,7 +25,7 @@ export default function CollectionsPage() {
 
     const [formData, setFormData] = useState({
         page: 1,
-        page_size: 10,
+        page_size: 100,
         is_highlight: 'False',
         is_public_domain: 'False',
         object_begin_date: 1700,
@@ -50,6 +50,7 @@ export default function CollectionsPage() {
     const [culture, setCulture] = useState('');
     const [medium,setMedium] = useState('');
     const[isPublicDomain, setIsPublicDomain] = useState(false);
+    const [artist, setArtist] = useState('');
 
     const handleInputChange = (event) => {
         setFormData({
@@ -89,6 +90,7 @@ export default function CollectionsPage() {
             department: department,
             culture: culture,
             medium: medium,
+            artist: artist,
         });
 
         // let str = "";
@@ -130,7 +132,9 @@ export default function CollectionsPage() {
 
     return (
         <Container>
-            {selectedObjectID && <ModalCard collectionId={selectedObjectID} handleClose={() => setObjectID(null)} />}
+            {selectedObjectID && <CollectionCard collectionId={selectedObjectID} handleClose={() => setObjectID(null)} />}
+
+
             <h2>Search Collections</h2>
             <Grid container spacing={6}>
                 <Grid item xs={4}>
@@ -182,8 +186,8 @@ export default function CollectionsPage() {
             <Grid item xs={4}>
                 <InputLabel>Department</InputLabel>
                 <Select name="department"
-                        value={formData.department}
-                        onChange={handleInputChange}
+                        value={department}
+                        onChange={(e) => SetDepartment(e.target.value)}
                         style={{maxWidth:"300px"}}
                 >
                     <MenuItem value="">Select Department</MenuItem>
@@ -193,7 +197,6 @@ export default function CollectionsPage() {
                     <MenuItem value="Asian Art">Asian Art</MenuItem>
                     <MenuItem value="Costume Institute">Costume Institute</MenuItem>
                     <MenuItem value="Drawings and Prints">Drawings and Prints</MenuItem>
-                    <MenuItem value="Egyptian Art">Egyptian Art</MenuItem>
                     <MenuItem value="European Paintings">European Paintings</MenuItem>
                     <MenuItem value="European Sculpture and Decorative Arts">European Sculpture and Decorative Arts</MenuItem>
                     <MenuItem value="Greek and Roman Art">Greek and Roman Art</MenuItem>
@@ -210,27 +213,27 @@ export default function CollectionsPage() {
             <Grid item xs={4}>
                 <InputLabel>Medium</InputLabel>
                 <Select name="medium"
-                        value={formData.medium}
-                        onChange={handleInputChange}
+                        value={medium}
+                        onChange={(e) => setMedium(e.target.value)}
                         style={{maxWidth:"300px"}}
                 >
                     <MenuItem value="">Select Medium</MenuItem>
                     <MenuItem value="Albumen silver print">Albumen silver print</MenuItem>
                     <MenuItem value="Albumen silver prints from glass negatives">Albumen silver prints from glass negatives</MenuItem>
-                    <MenuItem value="Albumen silver prints from paper negatives">Albumen silver prints from paper negatives</MenuItem>
-                    <MenuItem value="Albumen silver prints from paper negatives with applied color">Albumen silver prints from paper negatives with applied color</MenuItem>
-                    <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold">Albumen silver prints from paper negatives with applied color and applied gold</MenuItem>
-                    <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives</MenuItem>
-                    <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives</MenuItem>
-                    <MenuItem value="Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives, and albumen silver prints from paper negatives with applied color">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives, and albumen silver prints from paper negatives with applied color</MenuItem>
+                    <MenuItem value="Zwischengold glass">Albumen silver prints from paper negatives</MenuItem>
+                    <MenuItem value="Zincograph, type-metal engraving and letterpress on green paper">Albumen silver prints from paper negatives with applied color</MenuItem>
+                    <MenuItem value="Wrought iron">Albumen silver prints from paper negatives with applied color and applied gold</MenuItem>
+                    <MenuItem value="wool, silk">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives</MenuItem>
+                    <MenuItem value="Porcelain">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives</MenuItem>
+                    <MenuItem value="Brass">Albumen silver prints from paper negatives with applied color and applied gold, and albumen silver prints from paper negatives, and albumen silver prints from glass negatives, and albumen silver prints from paper negatives with applied color</MenuItem>
 
                 </Select>
             </Grid>
             <Grid item xs={4}>
                 <InputLabel>Artist</InputLabel>
                 <Select name="artist"
-                        value={formData.artist}
-                        onChange={handleInputChange}
+                        value={artist}
+                        onChange={(e) => setArtist(e.target.value)}
                         style={{maxWidth:"200px"}}
                 >
                     <MenuItem value="">Select Artist</MenuItem>
